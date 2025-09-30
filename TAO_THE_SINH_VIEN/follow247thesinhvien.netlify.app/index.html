@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<!-- Mirrored from follow247thesinhvien.netlify.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Sep 2025 04:34:34 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Công cụ tạo Thẻ Sinh viên Chuyên nghiệp</title>
+<script src="../cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+    /* --- Cài đặt chung & Bố cục --- */
+    :root {
+        --primary-color: #004a99;
+        --secondary-color: #dc3545;
+        --border-color: #e0e0e0;
+        --background-color: #f7f9fc;
+        --card-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        --font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    body {
+        font-family: var(--font-family);
+        background-color: var(--background-color);
+        margin: 0;
+        padding: 2em;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 3em;
+        flex-wrap: wrap;
+    }
+    /* --- Khu vực Form Nhập liệu --- */
+    .form-container {
+        background: #ffffff;
+        padding: 2em;
+        border-radius: 12px;
+        box-shadow: var(--card-shadow);
+        width: 100%;
+        max-width: 450px;
+    }
+    .form-container h2 {
+        text-align: center;
+        margin-top: 0;
+        color: var(--primary-color);
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0.5em;
+    }
+    .form-group {
+        margin-bottom: 1em;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5em;
+        font-weight: 600;
+        color: #333;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 0.8em;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        box-sizing: border-box;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .form-group input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 5px rgba(0, 74, 153, 0.2);
+        outline: none;
+    }
+    .form-group input[type="file"] {
+        padding: 0.5em;
+    }
+    fieldset {
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1em;
+        margin-top: 1.5em;
+    }
+    legend {
+        padding: 0 0.5em;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+    /* --- Khu vực Thẻ Sinh viên Xem trước --- */
+    .card-preview-wrapper {
+        width: 100%;
+        max-width: 536px;
+        text-align: center;
+    }
+     .card-preview-wrapper h2 {
+        color: #333;
+    }
+    #downloadBtn {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-bottom: 1.5em;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    #downloadBtn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+    #student-card {
+        width: 536px;
+        height: 320px;
+        background: #fff;
+        position: relative;
+        font-family: var(--font-family);
+        box-shadow: var(--card-shadow);
+        border-radius: 12px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+    }
+    /* Phần đầu thẻ */
+    .card-header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 10px 10px 10px 80px;
+        text-align: center;
+        position: relative;
+    }
+    .card-header h1 { font-size: 17px; margin: 0; font-weight: 700; }
+    .card-header p { font-size: 11px; margin: 2px 0 0; }
+    .card-logo {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 15px;
+        width: 55px;
+        height: 55px;
+        background-color: white;
+        border-radius: 50%;
+        padding: 5px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.3);
+        /* Đảm bảo nền trắng được chụp chính xác */
+        background-clip: content-box;
+    }
+    .card-logo img { width: 100%; height: 100%; border-radius: 50%; }
+    .card-subtitle {
+        background-color: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 3px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    /* Phần thân thẻ */
+    .card-body {
+        padding: 15px;
+        display: flex;
+        gap: 15px;
+        flex-grow: 1;
+    }
+    .student-photo {
+        width: 100px;
+        height: 125px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+    .student-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .student-info {
+        flex-grow: 1;
+        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+    }
+    .student-info p { margin: 0 0 8px 0; line-height: 1.4; }
+    .student-info p strong { display: inline-block; width: 70px; color: #555; }
+    .barcode-section {
+        margin-top: auto;
+    }
+    .barcode {
+        height: 30px;
+        width: 120px;
+        border-left: 2px solid black;
+        border-right: 2px solid black;
+        display: flex;
+        justify-content: space-around;
+        align-items: stretch;
+        padding: 0 5px;
+    }
+    .barcode .bar { width: 3px; background: black; }
+    .barcode .bar:nth-child(2) { width: 5px; }
+    .barcode .bar:nth-child(4) { width: 2px; }
+    #cardValidUpto { font-size: 11px; color: #777; margin-top: 4px !important; }
+    /* Phần chân thẻ */
+    .card-footer {
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+        width: calc(100% - 150px);
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        text-align: center;
+        color: #555;
+    }
+    .signature-area { height: 40px; }
+    .signature-area p { margin: 0; }
+    .signature-area .signature-name {
+        font-weight: bold;
+        font-family: 'Caveat', cursive;
+        font-size: 16px;
+        height: 25px;
+        color: #222;
+    }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="form-container">
+    <h2>📝 Biểu mẫu Thông tin</h2>
+    <fieldset>
+        <legend>Thông tin Trường</legend>
+        <div class="form-group">
+            <label for="collegeName">Tên trường</label>
+            <input type="text" id="collegeName" value="SHRI RAM COLLEGE OF COMMERCE">
+        </div>
+        <div class="form-group">
+            <label for="collegeAddress">Địa chỉ & Điện thoại</label>
+            <input type="text" id="collegeAddress" value="Delhi-110007   Phone : 011-27662319">
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Thông tin Sinh viên</legend>
+        <div class="form-group">
+            <label for="studentPhotoInput">Ảnh 3x4</label>
+            <input type="file" id="studentPhotoInput" accept="image/*">
+        </div>
+        <div class="form-group">
+            <label for="studentName">Họ và Tên</label>
+            <input type="text" id="studentName" value="AYUSHI GOEL">
+        </div>
+        <div class="form-group">
+            <label for="studentClass">Lớp</label>
+            <input type="text" id="studentClass" value="PGD-GBO-2nd Year">
+        </div>
+        <div class="form-group">
+            <label for="studentRoll">Mã sinh viên</label>
+            <input type="text" id="studentRoll" value="6">
+        </div>
+         <div class="form-group">
+            <label for="validUpto">Có giá trị đến</label>
+            <input type="text" id="validUpto" value="May 2027">
+        </div>
+    </fieldset>
+     <fieldset>
+        <legend>Xác nhận & Chữ ký</legend>
+        <div class="form-group">
+            <label for="cardHolderName">Tên người giữ thẻ (ký tên)</label>
+            <input type="text" id="cardHolderName" value="Ayushi goel">
+        </div>
+        <div class="form-group">
+            <label for="coordinatorName">Tên điều phối viên</label>
+            <input type="text" id="coordinatorName" placeholder="Nhập tên">
+        </div>
+        <div class="form-group">
+            <label for="principalName">Tên hiệu trưởng</label>
+            <input type="text" id="principalName" placeholder="Nhập tên">
+        </div>
+    </fieldset>
+</div>
+<div class="card-preview-wrapper">
+    <h2>🖼️ Xem trước & Tải về</h2>
+    <button id="downloadBtn">📥 Tải thẻ về</button>
+    <div id="student-card">
+        <div class="card-header">
+            <div class="card-logo">
+                <!-- Thêm crossorigin="anonymous" cho logo -->
+                <img src="logo.html" alt="Logo" crossorigin="anonymous">
+            </div>
+            <h1 id="cardCollegeName">SHRI RAM COLLEGE OF COMMERCE</h1>
+            <p>(University of Delhi)</p>
+            <p id="cardCollegeAddress">Delhi-110007   Phone : 011-27662319</p>
+        </div>
+        <div class="card-subtitle">
+            STUDENT IDENTITY CARD 2025-2029
+        </div>
+        <div class="card-body">
+            <div class="student-photo">
+                <img id="cardStudentPhoto" src="https://imgur.com/L3csoQs" alt="Student Photo" crossorigin="anonymous">
+            </div>
+            <div class="student-info">
+                <p><strong>Name:</strong> <span id="cardStudentName">AYUSHI GOEL</span></p>
+                <p><strong>Class:</strong> <span id="cardStudentClass">PGD-GBO-2nd Year</span></p>
+                <p><strong>Roll No:</strong> <span id="cardStudentRoll">6</span></p>
+                <div class="barcode-section">
+                    <div class="barcode">
+                        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    </div>
+                    <p id="cardValidUpto">Valid upto: May 2020</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="signature-area">
+                <p class="signature-name" id="cardHolderNameDisplay">Ayushi goel</p>
+                <p>Card Holder</p>
+            </div>
+            <div class="signature-area">
+                 <p class="signature-name" id="coordinatorNameDisplay"></p>
+                <p>Course Coordinator</p>
+            </div>
+            <div class="signature-area">
+                 <p class="signature-name" id="principalNameDisplay"></p>
+                <p>Principal</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Hàm cập nhật nội dung văn bản
+        function updateText(inputId, outputId, prefix = '') {
+            const inputElement = document.getElementById(inputId);
+            const outputElement = document.getElementById(outputId);
+            const update = () => {
+                outputElement.innerText = prefix + inputElement.value;
+            };
+            inputElement.addEventListener('input', update);
+            update(); // Cập nhật lần đầu khi tải trang
+        }
+        // Cập nhật các trường thông tin
+        updateText('collegeName', 'cardCollegeName');
+        updateText('collegeAddress', 'cardCollegeAddress');
+        updateText('studentName', 'cardStudentName');
+        updateText('studentClass', 'cardStudentClass');
+        updateText('studentRoll', 'cardStudentRoll');
+        updateText('validUpto', 'cardValidUpto', 'Valid upto: ');
+        // Cập nhật các trường chữ ký
+        updateText('cardHolderName', 'cardHolderNameDisplay');
+        updateText('coordinatorName', 'coordinatorNameDisplay');
+        updateText('principalName', 'principalNameDisplay');
+        // Cập nhật ảnh sinh viên
+        document.getElementById('studentPhotoInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const studentPhoto = document.getElementById('cardStudentPhoto');
+                    studentPhoto.src = e.target.result;
+                    // Khi dùng Data URL, không cần crossorigin
+                    studentPhoto.removeAttribute('crossorigin');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        // --- 3. THÊM CHỨC NĂNG CHO NÚT TẢI HÌNH ẢNH ---
+        const downloadBtn = document.getElementById('downloadBtn');
+        const cardElement = document.getElementById('student-card');
+        downloadBtn.addEventListener('click', () => {
+            html2canvas(cardElement, {
+                scale: 2, // Tăng chất lượng ảnh x2
+                useCORS: true // BẮT BUỘC PHẢI CÓ ĐỂ CHỤP ẢNH TỪ URL BÊN NGOÀI
+            }).then(canvas => {
+                const link = document.createElement('a');
+                const studentName = document.getElementById('studentName').value || 'sinh-vien';
+                const rollNumber = document.getElementById('studentRoll').value || 'msv';
+                // Tạo tên file động dạng: the-sinh-vien-AYUSHI-GOEL-6.png
+                link.download = `the-sinh-vien-${studentName.replace(/\s+/g, '-')}-${rollNumber}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                 // Xử lý lỗi nếu cần
+                 console.error("Lỗi khi tạo ảnh thẻ:", err);
+                 alert("Đã xảy ra lỗi khi tạo ảnh thẻ. Vui lòng kiểm tra console.");
+            });
+        });
+    });
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"98530b158ea4f8fb","version":"2025.9.1","r":1,"token":"e1c391be89e44ab9808fdf0c0ac7d3bc","serverTiming":{"name":{"cfExtPri":true,"cfEdge":true,"cfOrigin":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+
+<!-- Mirrored from follow247thesinhvien.netlify.app/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Sep 2025 04:34:36 GMT -->
+</html>
